@@ -1,0 +1,223 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Ubuntu', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+}
+
+.grid {
+    display: grid;
+    gap: 0;
+    grid-template-rows: 100px auto 150px;
+    overflow-x: clip;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex .row  {
+    flex-direction: row;
+}
+
+.flex.col {
+    flex-direction: column;
+}
+
+.page {
+    background-color: rgb(254, 254, 255);
+}
+
+header {
+    min-height: 100px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: rgb(87, 87, 87) 0px 3px;
+}
+
+header>.logo {
+    font-size: 48px;
+    font-weight: lighter;
+    padding: 10px 20px;
+}
+
+header .nav-btn {
+    visibility: hidden;
+}
+
+
+
+nav>a {
+    display: inline-block;
+    min-width: 100px;
+    padding: 10px 20px;
+}
+
+
+nav>.is-active {
+    color: rgb(222, 62, 62);
+}
+
+
+
+main {
+    align-items: flex-start;
+}
+
+main h1 {
+    font-weight: lighter;
+    font-size: 24px;
+    padding: 0;
+    margin: 80px 20px 0px;
+}
+
+main ol {
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 0 40px;
+    padding: 0;
+    list-style-type: disc;
+}
+
+main li {
+    box-sizing: content-box;
+}
+
+main ol h3 {
+    font-size: 32px;
+    font-weight: 500;
+    margin: 40px 0px 20px;
+}
+
+main ol p {
+    margin: 0;
+    padding: 0;
+    font-size: 28px;
+    font-weight: lighter;
+}
+
+
+
+
+
+
+
+
+.footer-col {
+    box-sizing: border-box;
+    min-width: 300px;
+    margin: 10px 20px;
+    align-items: flex-start;
+}
+
+.footer-item {
+    min-height: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+    height: 100px;
+    padding: 40px 0 0;
+}
+
+
+
+@media screen and (width <=640px) {
+    header.flex.row {
+        flex-direction: column;
+        width: 100%;
+        height: min-content;
+    }
+
+
+    header .nav-btn {
+        visibility: visible;
+    }
+
+    header>nav {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    header>nav.hiden {
+        display: none;
+    }
+    header>nav.open {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    footer.flex.row {
+        flex-direction: column;
+    }
+
+
+    .footer-col {
+        min-width: 100%;
+        margin: 20px 0px;
+        padding: 0 20px;
+    }
+}
+
+
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+
+}
+
+table td,
+table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+
+    word-wrap: break-word;
+    max-width: 150px;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #ddd;
+}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #527796;
+    color: white;
+}
+
+
+#loading {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.7;
+    background-color: #fff;
+    z-index: 99;
+  }
+
+#loading.loaded{
+    display: none;
+}
+  
+  #loading-image {
+    z-index: 100;
+  }
