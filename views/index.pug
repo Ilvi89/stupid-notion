@@ -1,0 +1,10 @@
+extends base
+block variables
+    -  const title = 'Index'
+block content
+    main.flex.col
+        h1 "Posts"
+        p #{message}
+        - for (let x = 0; x<10; x++)
+            p #{message} №#{x}
+
