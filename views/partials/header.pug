@@ -1,0 +1,13 @@
+- var authorised
+- var user
+header.flex.row
+    .logo
+        span "SharedTodo"
+    .user-block
+        if authorised
+            .user-block-name= user.name
+        else
+            input
+            input
+            button
+
