@@ -1,9 +1,8 @@
 import { UniqueEntityID } from "./UniqueEntityID";
 
 export interface Repository<T> {
+  find(id: UniqueEntityID): Promise<T>
   exists(t: T): Promise<boolean>;
-  delete(t: T): Promise<any>;
-  save(t: T): Promise<any>;
-
+  save(t: T): Promise<T>;
   getNewId(): UniqueEntityID;
 }
