@@ -22,10 +22,6 @@ export class Password extends ValueObject<IUserPasswordProps> {
     return password.length >= this.minLength;
   }
 
-  /**
-   * @method comparePassword
-   * @desc Compares as plain-text and hashed password.
-   */
 
   public async comparePassword(plainTextPassword: string): Promise<boolean> {
     let hashed: string;

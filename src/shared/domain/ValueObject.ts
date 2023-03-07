@@ -7,16 +7,16 @@ interface ValueObjectProps {
  * equality through their structrual property.
  */
 
-export abstract class ValueObject<T extends ValueObjectProps> {
-  public props: T;
+export abstract class ValueObject<TProps extends ValueObjectProps> {
+  public props: TProps;
 
-  constructor (props: T) {
+  protected constructor (props: TProps) {
     this.props = {
       ...props,
     };
   }
 
-  public equals (vo?: ValueObject<T>) : boolean {
+  public equals (vo?: ValueObject<TProps>) : boolean {
     if (vo === null || vo === undefined) {
       return false;
     }
