@@ -12,8 +12,9 @@ export interface UserProps {
   isEmailVerified?: boolean;
   username?: string;
   // Todo: convert to value object
+  //  deviceHistory rename to trustedDevices
   sessions?: Session[];
-  deviceHistory?: Device[];
+  trustedDevices?: Device[];
 }
 
 
@@ -63,7 +64,7 @@ export class UserAggregate extends AggregateRoot<UserProps> {
     if (!this.isEmailVerified)
       throw new Error("Email is not verified");
 
-    this.props.deviceHistory.push(device)
+    this.props.trustedDevices.push(device)
     const session = Session.create({ device: device, lastLogin: new Date() });
 
     const existedIndex = this.props.sessions.findIndex(s => s.device == device);
@@ -83,7 +84,7 @@ export class UserAggregate extends AggregateRoot<UserProps> {
     this.props.sessions = this.props.sessions.filter(s => s != session);
   }
 
-  hasUsedDeviceInPast(device: Device): boolean {
-    return !!this.props.deviceHistory.find(s => s == device);
+  isTrusted(device: Device): boolean {
+    return !!this.props.trustedDevices.find(s => s == device);
   }
 }
