@@ -4,20 +4,31 @@ import { Email } from "../domain/valueObjects/Email";
 import { Password } from "../domain/valueObjects/Password";
 import { UserAggregate } from "../domain/userAggregate";
 import { IEmailConfirmService } from "./IEmailConfirmService";
+import { ApiProperty } from "@nestjs/swagger";
+import { Inject, Injectable } from "@nestjs/common";
 
 // TODO: add typed Response
-type Response = void
+type Response = {
+  id: string;
+}
 
-export interface RegisterUserDTO {
-  username?: string;
+export class RegisterUserDTO {
+  @ApiProperty()
+  username: string;
+
+  @ApiProperty()
   email: string;
+
+  @ApiProperty()
   password: string;
 }
 
+
+@Injectable()
 export class Register implements UseCase<RegisterUserDTO, Promise<Response>> {
   constructor(
-    private readonly userRepo: IUserRepo,
-    private emailConfirmService: IEmailConfirmService) {
+    @Inject("IUserRepo") private readonly userRepo: IUserRepo,
+    @Inject("IEmailConfirmService") private emailConfirmService: IEmailConfirmService) {
   }
 
 
@@ -37,6 +48,7 @@ export class Register implements UseCase<RegisterUserDTO, Promise<Response>> {
     });
 
     this.emailConfirmService.requestConfirm(email);
-    await this.userRepo.save(user);
+    let u = await this.userRepo.save(user);
+    return { id: u.id.toString() };
   }
 }

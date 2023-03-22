@@ -50,7 +50,8 @@ export class UserAggregate extends AggregateRoot<UserProps> {
       ...props,
       isEmailVerified: props.isEmailVerified || false,
       sessions: props.sessions || [],
-      username: props.username || props.email.value
+      username: props.username || props.email.value,
+      trustedDevices: props.trustedDevices || []
     });
   }
 
@@ -64,19 +65,21 @@ export class UserAggregate extends AggregateRoot<UserProps> {
     if (!this.isEmailVerified)
       throw new Error("Email is not verified");
 
-    this.props.trustedDevices.push(device)
     const session = Session.create({ device: device, lastLogin: new Date() });
 
-    const existedIndex = this.props.sessions.findIndex(s => s.device == device);
+    const existedIndex = this.props.sessions.findIndex(s => s.device.equals(device));
     if (existedIndex > -1) {
       this.props.sessions[existedIndex] = session;
       return;
     } else if (this.props.sessions.length >= 5) {
       const oldestSession = this.props.sessions.indexOf(this.props.sessions.reduce((p, c) => p.lastLogin < c.lastLogin ? p : c));
       this.props.sessions[oldestSession] = session;
+
       return;
     }
 
+    if (!this.isTrusted(device))
+      this.props.trustedDevices.push(device);
     this.props.sessions.push(session);
   }
 
@@ -85,6 +88,6 @@ export class UserAggregate extends AggregateRoot<UserProps> {
   }
 
   isTrusted(device: Device): boolean {
-    return !!this.props.trustedDevices.find(s => s == device);
+    return !!this.props.trustedDevices.find(s => s.equals(device));
   }
 }

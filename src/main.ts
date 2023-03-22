@@ -11,7 +11,6 @@ async function bootstrap() {
     .setTitle('User domain example')
     .setDescription('The user auth and access control API')
     .setVersion('1.0')
-    .addTag('users')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

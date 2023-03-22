@@ -4,5 +4,7 @@ import { Repository } from "../../../shared/domain/Repository";
 
 export interface IUserRepo extends Repository<UserAggregate> {
   findUserByEmail(email: Email): Promise<UserAggregate>;
+
+  findFirstFive(): Promise<UserAggregate[]>;
 }
 
