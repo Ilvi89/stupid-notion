@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email           String  @unique
+  pass            String
+  name            String?
+  isEmailVerified Boolean @default(false)
+
+  sessions       Session[]
+  trustedDevices Devices[]
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+
+  device    Devices  @relation(fields: [deviceId], references: [id])
+  deviceId  Int      @unique
+  lastLogin DateTime
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Devices {
+  id   Int    @id @default(autoincrement())
+  code String
+
+  Session Session?
+  User    User     @relation(fields: [userId], references: [id])
+  userId  Int
+}
