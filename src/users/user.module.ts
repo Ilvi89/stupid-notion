@@ -1,17 +1,18 @@
 import { Module } from "@nestjs/common";
-import { FakeUserRepo } from "./infrastructure/repositories/UserRepo";
 import { FakeDeviceConfirmService, FakeEmailConfirmService } from "./infrastructure/services";
 import { Register } from "./useCases/register";
 import { UserController } from "./api/user.controller";
 import { ConfirmEmail } from "./useCases/confirmEmail";
 import { ConfirmAccess } from "./useCases/confirmAccess";
+import { UserRepository } from "./infrastructure/user.repository";
+import { PrismaService } from "../shared/infrastucture/prisma.service";
 
 
 @Module({
   providers: [
-    Register, ConfirmEmail, ConfirmAccess, {
+    Register, ConfirmEmail, ConfirmAccess, PrismaService, {
       provide: "IUserRepo",
-      useClass: FakeUserRepo
+      useClass: UserRepository
     }, {
       provide: "IEmailConfirmService",
       useClass: FakeEmailConfirmService
@@ -19,7 +20,7 @@ import { ConfirmAccess } from "./useCases/confirmAccess";
       provide: "IDeviceConfirmService",
       useClass: FakeDeviceConfirmService
     }],
-  controllers: [UserController]
+  controllers: [UserController],
 })
 export class UserModule {
 }

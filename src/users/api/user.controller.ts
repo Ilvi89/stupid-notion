@@ -20,11 +20,6 @@ export class UserController {
     @Inject("IUserRepo") private readonly userRepo: IUserRepo) {
   }
 
-  @Get()
-  async getAll() {
-    let user = await this.userRepo.findFirstFive();
-    return { users: user || "123" };
-  }
 
   @Get(":id")
   async get(@Param("id") id: string) {

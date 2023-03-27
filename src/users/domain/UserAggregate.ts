@@ -19,6 +19,17 @@ export interface UserProps {
 
 
 export class UserAggregate extends AggregateRoot<UserProps> {
+  private constructor(id: UniqueEntityID, props: UserProps) {
+    super(id, props);
+  }
+
+  get trustedDevices(): Device[] {
+    return this.props.trustedDevices;
+  }
+
+  get sessions(): Session[] {
+    return this.props.sessions;
+  };
 
   get email(): Email {
     return this.props.email;
@@ -38,10 +49,6 @@ export class UserAggregate extends AggregateRoot<UserProps> {
 
   get isEmailVerified(): boolean {
     return this.props.isEmailVerified;
-  }
-
-  private constructor(id: UniqueEntityID, props: UserProps) {
-    super(id, props);
   }
 
   public static create(id: UniqueEntityID, props: UserProps): UserAggregate {

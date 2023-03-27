@@ -2,7 +2,7 @@ import { UseCase } from "../../shared/domain/UseCase";
 import { IUserRepo } from "../domain/repositories/IUserRepo";
 import { Email } from "../domain/valueObjects/Email";
 import { Password } from "../domain/valueObjects/Password";
-import { UserAggregate } from "../domain/userAggregate";
+import { UserAggregate } from "../domain/UserAggregate";
 import { IEmailConfirmService } from "./IEmailConfirmService";
 import { ApiProperty } from "@nestjs/swagger";
 import { Inject, Injectable } from "@nestjs/common";

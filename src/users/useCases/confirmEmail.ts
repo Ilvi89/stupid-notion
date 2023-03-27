@@ -1,5 +1,5 @@
 import { UseCase } from "../../shared/domain/UseCase";
-import { UserAggregate } from "../domain/userAggregate";
+import { UserAggregate } from "../domain/UserAggregate";
 import { IUserRepo } from "../domain/repositories/IUserRepo";
 import { UniqueEntityID } from "../../shared/domain/UniqueEntityID";
 import { IEmailConfirmService } from "./IEmailConfirmService";

@@ -3,7 +3,7 @@ import { UseCase } from "../../shared/domain/UseCase";
 import { IUserRepo } from "../domain/repositories/IUserRepo";
 import { IEmailConfirmService } from "./IEmailConfirmService";
 import { IDeviceConfirmService } from "./IDeviceConfirmService";
-import { UserAggregate } from "../domain/userAggregate";
+import { UserAggregate } from "../domain/UserAggregate";
 import { Device } from "../domain/valueObjects/Session";
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
