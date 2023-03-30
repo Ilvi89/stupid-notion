@@ -4,7 +4,6 @@
 stupid but proud notion clone.
 - Author - [Ilya Pizik](https://github.com/Ilvi89)
 
-<img alt="img.png" src="prisma/main.png" width="500"/>
 
 ## Installation
 
