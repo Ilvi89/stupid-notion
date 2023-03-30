@@ -90,11 +90,16 @@ export class UserAggregate extends AggregateRoot<UserProps> {
     this.props.sessions.push(session);
   }
 
-  dropSession(session: Session) {
-    this.props.sessions = this.props.sessions.filter(s => s != session);
+  dropSessionOnDevice(device: Device) {
+    this.props.sessions = this.props.sessions.filter(s => s.device != device);
   }
+
 
   isTrusted(device: Device): boolean {
     return !!this.props.trustedDevices.find(s => s.equals(device));
+  }
+
+  dropAllSessions() {
+    this.props.sessions = [];
   }
 }

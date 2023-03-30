@@ -1,6 +1,6 @@
 import { Device } from "../domain/valueObjects/Session";
 
 export interface IDeviceConfirmService {
-  requestConfirm(currentlyInUseDevices: Device[]): void;
+  requestConfirm(devicesToRequest: Device[]): void;
   getConfirmCode(device: Device): Promise<string>;
 }

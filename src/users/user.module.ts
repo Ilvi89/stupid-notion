@@ -6,11 +6,13 @@ import { ConfirmEmail } from "./useCases/confirmEmail";
 import { ConfirmAccess } from "./useCases/confirmAccess";
 import { UserRepository } from "./infrastructure/user.repository";
 import { PrismaService } from "../shared/infrastucture/prisma.service";
+import { DropSession } from "./useCases/dropSession";
+import { DropAllSessions } from "./useCases/dropAllSessions";
 
 
 @Module({
   providers: [
-    Register, ConfirmEmail, ConfirmAccess, PrismaService, {
+    Register, ConfirmEmail, ConfirmAccess, DropSession, DropAllSessions, PrismaService, {
       provide: "IUserRepo",
       useClass: UserRepository
     }, {

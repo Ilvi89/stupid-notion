@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Post, Res } from "@nestjs/common";
 
 import { ApiTags } from "@nestjs/swagger";
 import { IUserRepo } from "../domain/repositories/IUserRepo";
@@ -7,6 +7,8 @@ import { Register, RegisterUserDTO } from "../useCases/register";
 import { Response } from "express";
 import { ConfirmEmail, ConfirmEmailDTO } from "../useCases/confirmEmail";
 import { ConfirmAccess, ConfirmAccessDTO } from "../useCases/confirmAccess";
+import { DropSession } from "../useCases/dropSession";
+import { DropAllSessions } from "../useCases/dropAllSessions";
 
 
 @ApiTags("users")
@@ -17,6 +19,8 @@ export class UserController {
     private readonly registerUC: Register,
     private readonly confirmEmailUC: ConfirmEmail,
     private readonly confirmAccessUC: ConfirmAccess,
+    private readonly dropSessionUC: DropSession,
+    private readonly dropAllSessionsUC: DropAllSessions,
     @Inject("IUserRepo") private readonly userRepo: IUserRepo) {
   }
 
@@ -24,7 +28,7 @@ export class UserController {
   @Get(":id")
   async get(@Param("id") id: string) {
     let user = await this.userRepo.find(new UniqueEntityID(id));
-    return { user: user || "123" };
+    return { user: user };
   }
 
   @Post("register")
@@ -43,5 +47,16 @@ export class UserController {
   async confirmDevice(@Body() confirmAccessDTO: ConfirmAccessDTO, @Res() res: Response) {
     await this.confirmAccessUC.execute(confirmAccessDTO);
     return res.redirect(`/users/${confirmAccessDTO.userId}`);
+  }
+
+
+  @Delete(":id/sessions")
+  async dropSession(@Param("id") id: string, @Body() body: { deviceId?: string }, @Res() res: Response) {
+    if (body.deviceId)
+      await this.dropSessionUC.execute({ userId: id, deviceId: body.deviceId });
+    else
+      await this.dropAllSessionsUC.execute({ userId: id });
+
+    return res.redirect(`/users/${id}`);
   }
 }
