@@ -39,7 +39,7 @@ export class UserController {
     return res.redirect(`/users/${id}`);
   }
 
-  @Post("register")
+  @Post("login")
   async login(@Body() user: LoginDTO, @Res() res: Response) {
     let { id } = await this.loginUC.execute(user);
     return res.redirect(`/users/${id}`);
