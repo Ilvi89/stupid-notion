@@ -9,6 +9,7 @@ import { ConfirmEmail, ConfirmEmailDTO } from "../useCases/confirmEmail";
 import { ConfirmAccess, ConfirmAccessDTO } from "../useCases/confirmAccess";
 import { DropSession } from "../useCases/dropSession";
 import { DropAllSessions } from "../useCases/dropAllSessions";
+import { Login, LoginDTO } from "../useCases/login";
 
 
 @ApiTags("users")
@@ -17,6 +18,7 @@ export class UserController {
 
   constructor(
     private readonly registerUC: Register,
+    private readonly loginUC: Login,
     private readonly confirmEmailUC: ConfirmEmail,
     private readonly confirmAccessUC: ConfirmAccess,
     private readonly dropSessionUC: DropSession,
@@ -34,6 +36,12 @@ export class UserController {
   @Post("register")
   async register(@Body() user: RegisterUserDTO, @Res() res: Response) {
     let { id } = await this.registerUC.execute(user);
+    return res.redirect(`/users/${id}`);
+  }
+
+  @Post("register")
+  async login(@Body() user: LoginDTO, @Res() res: Response) {
+    let { id } = await this.loginUC.execute(user);
     return res.redirect(`/users/${id}`);
   }
 
