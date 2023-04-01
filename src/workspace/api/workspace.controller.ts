@@ -24,4 +24,9 @@ export class WorkspacesController {
     let { id } = await this.createUC.execute(req);
     return res.redirect(`/workspaces/${id}`);
   }
+
+  @Get("user/:id")
+  async getUserWorkSpaces(@Param("id") id: string) {
+    return await this.workspaceRepo.findByOwner(new UniqueEntityID(id));
+  }
 }

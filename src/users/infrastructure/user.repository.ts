@@ -80,8 +80,6 @@ export class UserRepository implements IUserRepo {
       trustedDeviseSet.delete(s.device.code);
     });
 
-    console.dir(trustedDeviseSet, { depth: null });
-
 
     let raw = await this.prisma.user.upsert({
       where: {
@@ -158,7 +156,8 @@ class UserMapper {
       }),
       trustedDevices: user.trustedDevices?.map(d => {
         return { code: d.id };
-      })
+      }),
+      plan: undefined
     };
   }
 }
