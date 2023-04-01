@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepo {
   }
 
   async find(id: UniqueEntityID): Promise<UserAggregate> {
-    let raw: UserAggregateRaw = await this.prisma.user.findUnique({
+    let raw: UserRaw = await this.prisma.user.findUnique({
       where: { id: id.toString() },
       ...this.useRawQuery
     });
@@ -61,7 +61,7 @@ export class UserRepository implements IUserRepo {
   }
 
   async findUserByEmail(email: Email): Promise<UserAggregate> {
-    let raw: UserAggregateRaw = await this.prisma.user.findUnique({
+    let raw: UserRaw = await this.prisma.user.findUnique({
       where: { email: email.value },
       ...this.useRawQuery
     });
@@ -73,7 +73,7 @@ export class UserRepository implements IUserRepo {
   }
 
   async save(t: UserAggregate): Promise<UserAggregate> {
-    let userAggregateRaw: UserAggregateRaw = await UserMapper.toDB(t);
+    let userAggregateRaw: UserRaw = await UserMapper.toDB(t);
     let rawUser: User = userAggregateRaw;
     let trustedDeviseSet = new Set(userAggregateRaw.trustedDevices.map(d => d.code));
     userAggregateRaw.sessions.forEach(s => {
@@ -121,12 +121,11 @@ export class UserRepository implements IUserRepo {
   }
 }
 
-type UserAggregateRaw =
-  User
-  & { sessions: { device: { code: string }, lastLogin: Date }[], trustedDevices: { code: string }[] }
+type UserRaw = User &
+  { sessions: { device: { code: string }, lastLogin: Date }[], trustedDevices: { code: string }[] }
 
 class UserMapper {
-  static toDomain(raw: UserAggregateRaw): UserAggregate {
+  static toDomain(raw: any): UserAggregate {
     if (raw == null) return null;
     return UserAggregate.create(new UniqueEntityID(raw.id), {
       email: Email.create(raw.email),
@@ -141,7 +140,7 @@ class UserMapper {
     });
   }
 
-  static async toDB(user: UserAggregate): Promise<UserAggregateRaw> {
+  static async toDB(user: UserAggregate): Promise<UserRaw> {
     return {
       id: user.id.toString(),
       email: user.email.value,
