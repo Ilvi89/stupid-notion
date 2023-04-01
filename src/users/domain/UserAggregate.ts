@@ -76,8 +76,7 @@ export class UserAggregate extends AggregateRoot<UserProps> {
   createNewSession(device: Device) {
     if (!this.isEmailVerified)
       throw new Error("Email is not verified");
-
-    if (this.isTrusted(device))
+    if (!this.isTrusted(device))
       throw new Error("Device is not verified");
 
     const session = Session.create({ device: device, lastLogin: new Date() });
