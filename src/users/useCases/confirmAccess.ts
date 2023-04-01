@@ -56,7 +56,7 @@ export class ConfirmAccess implements UseCase<ConfirmAccessDTO, Response> {
     }
 
     if (!cc || cc != req.code) throw new Error("Access is unconfirmed");
-    user.createNewSession(device);
+    user.addTrustedDevice(device);
     await this.userRepo.save(user);
   }
 

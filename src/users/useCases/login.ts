@@ -37,7 +37,8 @@ export class Login implements UseCase<LoginDTO, Promise<Response>> {
     if (!user)
       throw new Error("User not found");
 
-    const passIsEquals = await user.password.comparePassword(password.value);
+    const passIsEquals = user.password.comparePassword(password.value);
+
     if (!passIsEquals)
       throw new Error("Incorrect password");
 
