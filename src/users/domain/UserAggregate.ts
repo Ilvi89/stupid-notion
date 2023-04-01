@@ -67,10 +67,18 @@ export class UserAggregate extends AggregateRoot<UserProps> {
     this.props.isEmailVerified = true;
   }
 
+  addTrustedDevice(device: Device) {
+    if (this.isTrusted(device))
+      return;
+    this.props.trustedDevices.push(device);
+  }
 
   createNewSession(device: Device) {
     if (!this.isEmailVerified)
       throw new Error("Email is not verified");
+
+    if (this.isTrusted(device))
+      throw new Error("Device is not verified");
 
     const session = Session.create({ device: device, lastLogin: new Date() });
 
@@ -85,8 +93,7 @@ export class UserAggregate extends AggregateRoot<UserProps> {
       return;
     }
 
-    if (!this.isTrusted(device))
-      this.props.trustedDevices.push(device);
+
     this.props.sessions.push(session);
   }
 

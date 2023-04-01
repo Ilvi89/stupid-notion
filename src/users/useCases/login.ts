@@ -5,20 +5,27 @@ import { IUserRepo } from "../domain/repositories/IUserRepo";
 import { Device } from "../domain/valueObjects/Session";
 import { IEmailConfirmService } from "./IEmailConfirmService";
 import { IDeviceConfirmService } from "./IDeviceConfirmService";
+import { ApiProperty } from "@nestjs/swagger";
+import { Inject } from "@nestjs/common";
 
-interface LoginDTO {
+export class LoginDTO {
+  @ApiProperty()
   deviceId: string;
+  @ApiProperty()
   email: string;
+  @ApiProperty()
   password: string;
 }
 
-type Response = void
+type Response = {
+  id: string;
+}
 
 export class Login implements UseCase<LoginDTO, Promise<Response>> {
   constructor(
-    private readonly userRepo: IUserRepo,
-    private readonly emailConfirmService: IEmailConfirmService,
-    private readonly deviceConfirmService: IDeviceConfirmService) {
+    @Inject("IUserRepo") private readonly userRepo: IUserRepo,
+    @Inject("IEmailConfirmService") private readonly emailConfirmService: IEmailConfirmService,
+    @Inject("IDeviceConfirmService") private readonly deviceConfirmService: IDeviceConfirmService) {
   }
 
   async execute(req: LoginDTO): Promise<Response> {
@@ -40,11 +47,14 @@ export class Login implements UseCase<LoginDTO, Promise<Response>> {
     }
 
     if (!user.isTrusted(device)) {
-      this.deviceConfirmService.requestConfirm(user.currentlyInUseDevices)
+      this.deviceConfirmService.requestConfirm(user.currentlyInUseDevices);
       throw new Error("device used for the first time");
     }
 
     user.createNewSession(device);
+    await this.userRepo.save(user);
+
+    return { id: user.id.toString() };
   }
 
 }
