@@ -25,11 +25,11 @@ export class WorkspaceAggregate extends AggregateRoot<WorkspaceProps> {
     return this.props.name;
   }
 
-  public static create(id: UniqueEntityID, props: WorkspaceProps): WorkspaceAggregate {
+  get members(): Member[] {
+    return this.props.members;
+  }
 
-    if (!props.owner.canCreateWorkspace()) {
-      throw new Error("Owner workspace limit reached");
-    }
+  public static create(id: UniqueEntityID, props: WorkspaceProps): WorkspaceAggregate {
     return new WorkspaceAggregate(id, {
       ...props,
       name: props.name || props.owner.name + " " + "Workspace",
@@ -39,7 +39,13 @@ export class WorkspaceAggregate extends AggregateRoot<WorkspaceProps> {
     });
   }
 
+  public addMember(member: Member, accessLevel?: AccessLevel) {
+    if (this.props.members.indexOf(member) != -1)
+      throw new Error("Member already exist");
 
+    member.setAccessLevel(accessLevel || member.accessLevel || AccessLevel.Read());
+    this.props.members.push(member);
+  }
 }
 
 

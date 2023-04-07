@@ -156,6 +156,8 @@ class UserMapper {
       trustedDevices: user.trustedDevices?.map(d => {
         return { code: d.id };
       }),
+
+      // Todo:
       plan: undefined
     };
   }

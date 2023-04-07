@@ -21,7 +21,7 @@ type Response = {
 export class Create implements UseCase<CreateDTO, Response> {
   constructor(
     @Inject("IOwnerRepo") private readonly ownerRepo: IOwnerRepo,
-  @Inject("IWorkspaceRepo") private readonly workspaceRepo: IWorkspaceRepo
+    @Inject("IWorkspaceRepo") private readonly workspaceRepo: IWorkspaceRepo
   ) {
   }
 
@@ -30,10 +30,14 @@ export class Create implements UseCase<CreateDTO, Response> {
     if (!owner)
       throw new Error("Owner not found");
 
-    const workspace = WorkspaceAggregate.create(this.ownerRepo.getNewId(), { owner: owner })
-    await this.workspaceRepo.save(workspace)
+    if (!owner.canCreateWorkspace()) {
+      throw new Error("Owner workspace limit reached");
+    }
 
-    return {id: workspace.id.toString()}
+    const workspace = WorkspaceAggregate.create(this.workspaceRepo.getNewId(), { owner: owner });
+    await this.workspaceRepo.save(workspace);
+
+    return { id: workspace.id.toString() };
   }
 
 }

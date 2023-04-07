@@ -1,6 +1,6 @@
-import { Entity } from "../../shared/domain/Entity";
 import { UniqueEntityID } from "../../shared/domain/UniqueEntityID";
 import { Plan } from "./Plan";
+import { Entity } from "../../shared/domain/Entity";
 
 type OwnerProps = {
   plan?: Plan

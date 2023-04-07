@@ -23,6 +23,7 @@ model User {
 
   sessions       Session[]
   trustedDevices Devices[]
+  member         Member[]
 }
 
 model Session {
@@ -50,4 +51,17 @@ model Workspace {
   name    String
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
+
+  members Member[]
+}
+
+model Member {
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  accessLevel String
+
+  @@id([workspaceId, userId])
 }

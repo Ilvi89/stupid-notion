@@ -7,6 +7,8 @@ import { Workspace } from "@prisma/client";
 import { Plan } from "../domain/Plan";
 import { IWorkspaceRepo } from "../domain/repositories/IWorkspaceRepo";
 import { WorkspaceAggregate } from "../domain/WorkspaceAggregate";
+import { Member } from "../domain/Member";
+import { AccessLevel } from "../domain/AccessLevel";
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepo {
@@ -29,7 +31,8 @@ export class WorkspaceRepository implements IWorkspaceRepo {
       include: {
         owner: {
           select: { plan: true, name: true }
-        }
+        },
+        members: { select: { accessLevel: true, userId: true } }
       }
     });
 
@@ -38,6 +41,7 @@ export class WorkspaceRepository implements IWorkspaceRepo {
 
   async save(t: WorkspaceAggregate): Promise<WorkspaceAggregate> {
 
+    console.dir(t, { depth: null });
     var raw = await this.prisma.workspace.upsert({
       where: { id: t.id.toString() },
       create: {
@@ -48,10 +52,31 @@ export class WorkspaceRepository implements IWorkspaceRepo {
       update: {
         id: t.id.toString(),
         ownerId: t.ownerId.toString(),
-        name: t.name
+        name: t.name,
+        members: {
+          upsert: [...t.members.map(m => {
+            return {
+              where: {
+                workspaceId_userId: {
+                  userId: m.id.toString(),
+                  workspaceId: t.id.toString()
+                }
+              },
+              create: {
+                userId: m.id.toString(),
+                accessLevel: m.accessLevel.toString()
+              },
+              update: {
+                userId: m.id.toString(),
+                accessLevel: m.accessLevel.toString()
+              }
+            };
+          })]
+        }
       },
       include: {
-        owner: { select: { plan: true, name: true } }
+        owner: { select: { plan: true, name: true } },
+        members: { select: { accessLevel: true, userId: true, workspaceId: true } }
       }
     });
 
@@ -61,14 +86,20 @@ export class WorkspaceRepository implements IWorkspaceRepo {
   async findByOwner(id: UniqueEntityID): Promise<WorkspaceAggregate[]> {
     return await this.prisma.workspace.findMany({
       where: { ownerId: id.toString() },
-      include: { owner: { select: { plan: true, name: true } } }
+      include: {
+        owner: { select: { plan: true, name: true } },
+        members: { select: { accessLevel: true, userId: true } }
+      }
     }).then(value => value.map(v => WorkspaceMapper.toDomain(v)));
   }
 
 
 }
 
-type WorkspaceRaw = Workspace & { owner: { plan: string, name: string } }
+type WorkspaceRaw = Workspace & {
+  owner: { plan: string, name: string },
+  members: { accessLevel: string, userId: string }[]
+}
 
 class WorkspaceMapper {
   static toDomain(raw: WorkspaceRaw): WorkspaceAggregate {
@@ -76,7 +107,9 @@ class WorkspaceMapper {
       owner: Owner.create(new UniqueEntityID(raw.ownerId.toString()), {
         plan: this.getPlan(raw.owner.plan),
         name: raw.name
-      })
+      }),
+      members: raw.members.map<Member>(m =>
+        Member.create(new UniqueEntityID(m.userId), { accessLevel: AccessLevel.FromString(m.accessLevel) }))
     });
   }
 

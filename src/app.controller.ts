@@ -1,16 +1,23 @@
-import { Controller, Get, Render, UseInterceptors } from "@nestjs/common";
-import { AppService } from "./app.service";
+import { Controller, Get, Post, Render, UseInterceptors } from "@nestjs/common";
 import { TransformationInterceptor } from "./logging.interceptor";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {
+  constructor() {
   }
 
   @Get()
   @Render("index")
   @UseInterceptors(TransformationInterceptor)
-  getHello() {
-    return { message: "HElllo world!" , authorised: false, user: {name: "adad"}};
+  get() {
+    return { message: "HElllo world!" , authorised: false};
   }
+
+  @Get("/user")
+  @Render("index")
+  @UseInterceptors(TransformationInterceptor)
+  getUser() {
+    return { message: "HElllo world!" , authorised: true, user: {name: "Ilya"}};
+  }
+
 }

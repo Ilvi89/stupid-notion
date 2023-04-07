@@ -1,6 +1,6 @@
 import { ValueObject } from "../../shared/domain/ValueObject";
 
-type AccessMode = "EDIT" | "READ" | "COMMENT"
+export type AccessMode = "EDIT" | "READ" | "COMMENT"
 
 type AccessLevelProps = {
   mode: AccessMode
@@ -19,5 +19,29 @@ export class AccessLevel extends ValueObject<AccessLevelProps> {
   }
   public static Comment(): AccessLevel {
     return new AccessLevel({ mode: this.ACCESS_COMMENT });
+  }
+
+  public toString(): string {
+    return this.props.mode.toString()
+  }
+
+  public static FromString(s: string): AccessLevel | null {
+    let mode: AccessMode
+
+    switch (s) {
+      case "EDIT":
+        mode = "EDIT"
+        break
+      case "READ":
+        mode = "READ"
+        break
+      case "COMMENT":
+        mode = "COMMENT"
+        break
+      default:
+        return null
+    }
+
+    return new AccessLevel({ mode: mode })
   }
 }
